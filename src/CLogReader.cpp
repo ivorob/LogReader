@@ -13,6 +13,11 @@ CLogReader::CLogReader()
     setImpl(new LogFileViewImpl);
 }
 
+CLogReader::~CLogReader()
+{
+    delete this->impl;
+}
+
 bool
 CLogReader::Open(const char *filename)
 {
@@ -126,6 +131,7 @@ CLogReader::applyFilter(const char *line, size_t size) const
 void
 CLogReader::setImpl(LogReaderImpl *impl)
 {
+    delete this->impl;
     this->impl = impl;
 }
 

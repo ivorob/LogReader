@@ -7,7 +7,7 @@
 class CLogReader {
 public:
     CLogReader();
-    ~CLogReader() = default;
+    ~CLogReader();
 
     bool Open(const char *filename);
     bool SetFilter(const char *filter);
