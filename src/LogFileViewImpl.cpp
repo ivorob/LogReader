@@ -59,25 +59,31 @@ LogFileViewImpl::isSourceOpen() const
     return this->buffer != nullptr;
 }
 
+void
+LogFileViewImpl::resetPosition()
+{
+    this->position = 0;
+}
+
 const char *
 LogFileViewImpl::readRecord(size_t& size)
 {
-    const char *line = &buffer[position];
-    while (position < this->bufferSize && 
-           buffer[position] != '\n' &&
-           buffer[position] != '\r')
+    const char *line = &buffer[this->position];
+    while (this->position < this->bufferSize && 
+           buffer[this->position] != '\n' &&
+           buffer[this->position] != '\r')
     {
-        ++position;
+        ++this->position;
     }
 
-    size = &buffer[position] - line;
+    size = &buffer[this->position] - line;
 
     //pass CRLF
-    while (position < this->bufferSize &&
-           (buffer[position] == '\n' ||
-            buffer[position] == '\r'))
+    while (this->position < this->bufferSize &&
+           (buffer[this->position] == '\n' ||
+            buffer[this->position] == '\r'))
     {
-        ++position;
+        ++this->position;
     }
 
     return size != 0 ? line : nullptr;

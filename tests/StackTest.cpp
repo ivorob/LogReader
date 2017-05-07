@@ -46,3 +46,12 @@ TEST(StackTest, back)
     stack.pop();
     ASSERT_EQ(0, stack.back());
 }
+
+TEST(StackTest, empty)
+{
+    Stack<int> stack;
+    ASSERT_TRUE(stack.empty());
+
+    stack.push(1);
+    ASSERT_FALSE(stack.empty());
+}

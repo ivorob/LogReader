@@ -14,6 +14,7 @@ public:
     bool open(const char *src) override;
     void close() override;
 
+    void resetPosition() override;
     const char *readRecord(size_t& size) override;
 private:
     HANDLE fileHandle;

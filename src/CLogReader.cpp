@@ -4,6 +4,7 @@
 
 #include "CLogReader.h"
 #include "LogFileViewImpl.h"
+#include "Stack.h"
 
 CLogReader::CLogReader()
     : filter(),
@@ -36,6 +37,7 @@ CLogReader::SetFilter(const char *filter)
         lstrcpy(this->filter, filter);
 
         normalizeFilter();
+        getImpl()->resetPosition();
     }
 
     return hasValidFilter();
@@ -71,7 +73,54 @@ CLogReader::GetNextLine(char *buffer, int size)
 bool
 CLogReader::applyFilter(const char *line, size_t size) const
 {
-    return true;
+    Stack<size_t> positionStack;
+    Stack<size_t> maskPositionStack;
+    positionStack.push(0);
+    maskPositionStack.push(0);
+
+    size_t position = 0;
+    size_t maskPosition = 0;
+    while (position < size && this->filter[maskPosition] != 0) {
+        char currentSymbol = line[position];
+        char maskSymbol = this->filter[maskPosition];
+
+        switch (maskSymbol) {
+            case '?':
+                ++position;
+                ++maskPosition;
+                break;
+            case '*':
+                maskPositionStack.push(maskPosition);
+
+                ++maskPosition;
+                while (this->filter[maskPosition] != line[position] && position < size) {
+                    ++position;
+                }
+
+                positionStack.push(position);
+                break;
+            default:
+                if (currentSymbol != maskSymbol) {
+                    position = positionStack.back();
+                    maskPosition = maskPositionStack.back();
+
+                    if (!positionStack.empty()) {
+                        positionStack.pop();
+                        maskPositionStack.pop();
+                    }
+
+                    positionStack.push(++position);
+                    maskPositionStack.push(maskPosition);
+                } else {
+                    ++position;
+                    ++maskPosition;
+                }
+
+                break;
+        }
+    }
+
+    return this->filter[maskPosition] == 0;
 }
 
 void
@@ -112,5 +161,11 @@ CLogReader::normalizeFilter()
 
         delete[] this->filter;
         this->filter = buffer;
+
+        //remove last *
+        length = lstrlen(this->filter);
+        if (this->filter[length - 1] == '*') {
+            this->filter[length - 1] = 0;
+        }
     }
 }

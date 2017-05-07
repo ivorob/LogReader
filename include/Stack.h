@@ -28,6 +28,10 @@ public:
         return this->amount;
     }
 
+    bool empty() const {
+        return this->amount == 0;
+    }
+
     void push(const T& value) {
         if (this->amount <= this->reserved) {
             reserve(this->amount + this->increment);
@@ -73,7 +77,7 @@ private:
     T **items;
     size_type reserved;
     size_type amount;
-    T nullValue;
+    const T nullValue;
 };
 
 #endif //__STACK_TEMPLATE_H__

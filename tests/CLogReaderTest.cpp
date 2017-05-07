@@ -30,7 +30,26 @@ TEST(CLogReaderTest, GetNextLine)
     ASSERT_TRUE(logReader.Open("test_data\\logfile.txt"));
     ASSERT_FALSE(logReader.GetNextLine(buffer, sizeof(buffer))); //because of SetFilter
 
-    ASSERT_TRUE(logReader.SetFilter("or??r***clos?d"));
+    ASSERT_TRUE(logReader.SetFilter("?rder"));
     ASSERT_TRUE(logReader.GetNextLine(buffer, sizeof(buffer)));
-    ASSERT_FALSE(logReader.GetNextLine(buffer, sizeof(buffer))); //end of file
+    ASSERT_EQ("1 or order 1 clo ok", std::string(buffer));
+
+    ASSERT_TRUE(logReader.SetFilter("?rder*closed"));
+    ASSERT_TRUE(logReader.GetNextLine(buffer, sizeof(buffer)));
+    ASSERT_TRUE(logReader.GetNextLine(buffer, sizeof(buffer)));
+
+    ASSERT_TRUE(logReader.SetFilter("?rder*closed1"));
+    ASSERT_TRUE(logReader.GetNextLine(buffer, sizeof(buffer)));
+    ASSERT_FALSE(logReader.GetNextLine(buffer, sizeof(buffer)));
+
+    ASSERT_TRUE(logReader.SetFilter("?rder*closed?"));
+    ASSERT_TRUE(logReader.GetNextLine(buffer, sizeof(buffer)));
+    ASSERT_TRUE(logReader.GetNextLine(buffer, sizeof(buffer)));
+    ASSERT_FALSE(logReader.GetNextLine(buffer, sizeof(buffer)));
+
+    ASSERT_TRUE(logReader.SetFilter("?*"));
+    ASSERT_TRUE(logReader.GetNextLine(buffer, sizeof(buffer)));
+    ASSERT_TRUE(logReader.GetNextLine(buffer, sizeof(buffer)));
+    ASSERT_TRUE(logReader.GetNextLine(buffer, sizeof(buffer)));
+    ASSERT_TRUE(logReader.GetNextLine(buffer, sizeof(buffer)));
 }

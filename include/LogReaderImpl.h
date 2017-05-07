@@ -10,6 +10,7 @@ public:
     virtual bool open(const char *src) = 0;
     virtual void close() = 0;
 
+    virtual void resetPosition() = 0;
     virtual const char *readRecord(size_t& size) = 0;
 };
 
