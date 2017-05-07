@@ -4,7 +4,12 @@ PROJECT (LogReader)
 SET (SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 SET (INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
 SET (SOURCES
-        ${SRC_DIR}/main.cpp)
+        ${SRC_DIR}/main.cpp
+        ${SRC_DIR}/CLogReader.cpp
+        ${SRC_DIR}/LogFileViewImpl.cpp)
+SET (HEADERS
+        ${INCLUDE_DIR}/CLogReader.h
+        ${INCLUDE_DIR}/LogFileViewImpl.h)
 
 INCLUDE_DIRECTORIES (${INCLUDE_DIR})
 
