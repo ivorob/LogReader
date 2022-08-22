@@ -1,4 +1,0 @@
-1 or order 1 clo ok
-2 or order 2 clo closed2
-3 and order 3 clo ok
-4 or order 4 clo closed1
